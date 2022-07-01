@@ -1,0 +1,181 @@
+﻿<html>
+    <head>
+        <title>Single Stone Screen</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script> 
+    </head>
+    <body>
+            <div class="jumbotron text-center">
+                <h1>Single Stone End to End Test Screen</h1>
+            </div>
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <button id="btnGetAll">Get All</button>
+                            </div>
+                            <div class="col-sm-6">
+                                <button id="btnGetCallList">Call List</button>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <button id="btnGet">Get By Id</button>
+                            </div>
+                            <div class="col-sm-3">
+                                <button id="btnPost">Create</button>
+                            </div>
+                            <div class="col-sm-3">
+                                <button id="btnPut">Update</button>
+                            </div>
+                            <div class="col-sm-3">
+                                <button id="btnDelete">Delete</button>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <label>Id:<input id="tbxId" type="number" /></label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                Contact Entry:
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <!-- contact entry-->
+                                <textarea id="txrContact" cols="50" rows="50">
+{
+  "name": {
+    "first": "Harold",
+    "middle": "Francis",
+    "last": "Gilkey"
+  },
+  "address": {
+    "street": "8360 High Autumn Row",
+    "city": "Cannon",
+    "state": "Delaware",
+    "zip": "19797"
+  },
+  "phone": [
+    {
+      "number": "302-611-9148",
+      "type": "home"
+    },
+    {
+      "number": "302-532-9427",
+      "type": "mobile"
+    }
+  ],
+  "email": "harold.gilkey@yahoo.com"
+}
+
+
+                                </textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                Last Result:
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <!--last result-->
+                                <textarea id="txrLastResult" cols="50" rows="54"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        <script>
+            function getId() {
+                return $("#tbxId").val()
+            }
+            function getContact() {
+                var contact = JSON.parse($("#txrContact").val());
+                return $("#txrContact").val();
+            }
+            function getPath() {
+                return this.window.location.origin + '/api/contacts';
+            }
+            function setLastResult(data, status) {
+                $("#txrLastResult").val(data);
+            }
+            $(document).ready(function() {
+
+                $("#btnGet").click(function() {
+                    var url = getPath() + '/' + getId();
+                    $.get(
+                        url,
+                        setLastResult
+                    );
+                });
+                
+                $("#btnPost").click(function() {
+                    var url = getPath();
+                    var contact = getContact();
+                    $.ajax(
+                        url,
+                        {
+                            type: "POST",
+                            contentType: 'application/json; charset=utf-8',
+                            data: contact
+                        }
+                    ).then(setLastResult);
+
+                });
+                
+                $("#btnPut").click(function() {
+                    var url = getPath() + '/' + getId();
+                    var contact = getContact();
+                    $.ajax(
+                        url,
+                        {
+                            type: "PUT",
+                            contentType: 'application/json; charset=utf-8',
+                            data: contact
+                        }
+                    ).then(setLastResult);
+                });
+                
+                $("#btnDelete").click(function() {
+                    var url = getPath() + '/' + getId();
+                    var contact = getContact();
+                    $.ajax(
+                        url,
+                        {
+                            type: "DELETE"
+                        }
+                    ).then(setLastResult)
+                });
+                
+                $("#btnGetAll").click(function() {
+                    var url = getPath()
+                    $.get(
+                        url,
+                        setLastResult
+                    );
+
+                });
+                
+                $("#btnGetCallList").click(function() {
+                    var url = getPath() + '/call-list'
+                    $.get(
+                        url,
+                        setLastResult
+                    );
+
+                });
+
+            });
+        </script>
+    </body>
+</html>
